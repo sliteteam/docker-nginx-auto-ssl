@@ -3,16 +3,10 @@
 RESTY_CONF_DIR="/usr/local/openresty/nginx/conf"
 NGINX_CONF_DIR="/etc/nginx/conf.d"
 
-# openresty will change it later on his own, right now we're just giving it access
-chmod 777 /etc/resty-auto-ssl
-
 # we want to keep dhparam.pem in volume, to generate just one time
 if [ ! -f "/etc/resty-auto-ssl/dhparam.pem" ]; then
-  if [ -n "$DIFFIE_HELLMAN" ]; then
-    openssl dhparam -out /etc/resty-auto-ssl/dhparam.pem 2048
-  else
-    cp ${RESTY_CONF_DIR}/dhparam.pem /etc/resty-auto-ssl/dhparam.pem
-  fi
+  echo "Missing /etc/resty-auto-ssl/dhparam.pem"
+  exit
 fi
 
 

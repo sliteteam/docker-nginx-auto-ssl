@@ -1,4 +1,4 @@
-FROM openresty/openresty:alpine-fat
+FROM openresty/openresty:1.21.4.1-alpine-fat
 
 # allowed domains should be lua match pattern
 ENV DIFFIE_HELLMAN='' \
@@ -9,6 +9,7 @@ ENV DIFFIE_HELLMAN='' \
     LETSENCRYPT_URL='https://acme-v02.api.letsencrypt.org/directory' \
     STORAGE_ADAPTER='file' \
     REDIS_HOST='' \
+    REDIS_AUTH='' \
     REDIS_PORT='6379' \
     REDIS_DB='0' \
     REDIS_KEY_PREFIX='' \
@@ -23,14 +24,11 @@ RUN apk --no-cache add bash openssl \
     -subj '/CN=sni-support-required-for-valid-ssl' \
     -keyout /etc/ssl/resty-auto-ssl-fallback.key \
     -out /etc/ssl/resty-auto-ssl-fallback.crt \
-    && openssl dhparam -out /usr/local/openresty/nginx/conf/dhparam.pem 2048 \
     # let's remove default open resty configuration, we'll conditionally add modified version in entrypoint.sh
     && rm /etc/nginx/conf.d/default.conf
 
 COPY nginx.conf snippets /usr/local/openresty/nginx/conf/
 COPY entrypoint.sh /entrypoint.sh
-
-VOLUME /etc/resty-auto-ssl
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/usr/local/openresty/bin/openresty", "-g", "daemon off;"]
