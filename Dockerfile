@@ -1,8 +1,7 @@
 FROM openresty/openresty:1.21.4.1-alpine-fat
 
 # allowed domains should be lua match pattern
-ENV DIFFIE_HELLMAN='' \
-    ALLOWED_DOMAINS='.*' \
+ENV ALLOWED_DOMAINS='.*' \
     AUTO_SSL_VERSION='0.13.1' \
     FORCE_HTTPS='true' \
     SITES='' \
@@ -13,11 +12,10 @@ ENV DIFFIE_HELLMAN='' \
     REDIS_PORT='6379' \
     REDIS_DB='0' \
     REDIS_KEY_PREFIX='' \
-    RESOLVER_ADDRESS='8.8.8.8'
+    RESOLVER_ADDRESS='8.8.8.8'\
+    INCLUDE_HTTP_PING='false'
 
-# Here we install open resty and generate dhparam.pem file.
-# You can specify DIFFIE_HELLMAN=true to force regeneration of that file on first run
-# also we create fallback ssl keys
+# We create fallback ssl keys
 RUN apk --no-cache add bash openssl \
     && /usr/local/openresty/luajit/bin/luarocks install lua-resty-auto-ssl $AUTO_SSL_VERSION \
     && openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 \

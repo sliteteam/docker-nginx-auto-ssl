@@ -51,6 +51,13 @@ if [ "$FORCE_HTTPS" == "true" ]; then
   fi
 fi
 
+if [ "$INCLUDE_HTTP_PING" == "true" ]; then
+  # only do this, if it's first run
+  if ! grep -q "http-ping.conf" ${RESTY_CONF_DIR}/resty-server-http.conf
+  then
+    echo "include http-ping.conf;" >> ${RESTY_CONF_DIR}/resty-server-http.conf
+  fi
+fi
 
 # let's substitute $ALLOWED_DOMAINS, $LETSENCRYPT_URL and $RESOLVER_ADDRESS into OpenResty configuration
 envsubst '$ALLOWED_DOMAINS,$LETSENCRYPT_URL,$RESOLVER_ADDRESS,$STORAGE_ADAPTER,$REDIS_HOST,$REDIS_PORT,$REDIS_DB,$REDIS_KEY_PREFIX' \
