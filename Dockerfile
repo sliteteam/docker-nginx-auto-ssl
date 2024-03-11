@@ -1,4 +1,4 @@
-FROM openresty/openresty:1.21.4.1-6-alpine-fat
+FROM openresty/openresty:1.25.3.1-2-alpine-fat
 
 # allowed domains should be lua match pattern
 ENV ALLOWED_DOMAINS='.*' \
